@@ -1,8 +1,8 @@
 import { Text, StyleSheet, View } from "react-native";
-import RepositoryList from "./RepositoryList";
-import AppBar from "./AppBar";
+import RepositoryList from './RepositoryList';
+import AppBar from './AppBar';
 import { Route, Routes, Navigate } from "react-router-native";
-import SignIn from "./SignIn";
+import SignIn from './SignIn';
 
 const styles = StyleSheet.create({
   container: {
@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
 });
 
 const Main = () => {
+  console.log('Main component mounted');
   return (
     <View style={styles.container}>
       <AppBar />
