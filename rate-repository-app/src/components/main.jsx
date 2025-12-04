@@ -1,8 +1,13 @@
 import { Text, StyleSheet, View } from "react-native";
-import RepositoryList from './RepositoryList';
-import AppBar from './AppBar';
-import { Route, Routes, Navigate } from "react-router-native";
-import SignIn from './SignIn';
+import RepositoryList from "./RepositoryListContainer";
+import AppBar from "./AppBar";
+import { Route, Routes, Navigate, useParams } from "react-router-native";
+import { SignInContainer } from "./SignInContainer";
+import SingleRepositoryItem from "./SingleRepositoryItem";
+import CreateReview from "./CreateReview";
+import SignUp from "./SignUp";
+import { PaperProvider } from "react-native-paper";
+import MyReviews from "./MyReviews";
 
 const styles = StyleSheet.create({
   container: {
@@ -12,17 +17,23 @@ const styles = StyleSheet.create({
 });
 
 const Main = () => {
-  console.log('Main component mounted');
+  console.log("Main component mounted");
   return (
-    <View style={styles.container}>
-      <AppBar />
-      <Text>Rate Repository Application</Text>
-      <Routes>
-        <Route path="/" element={<RepositoryList />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-        <Route path="/signin" element={<SignIn />} />
-      </Routes>
-    </View>
+    <PaperProvider>
+      <View style={styles.container}>
+        <AppBar />
+        <Text>Rate Repository Application</Text>
+        <Routes>
+          <Route path="/" element={<RepositoryList />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/signin" element={<SignInContainer />} />
+          <Route path="/:id" element={<SingleRepositoryItem />} />
+          <Route path="/create-review" element={<CreateReview />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="my-reviews" element={<MyReviews />} />
+        </Routes>
+      </View>
+    </PaperProvider>
   );
 };
 

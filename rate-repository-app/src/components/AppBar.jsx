@@ -1,6 +1,6 @@
 import { View, StyleSheet, Pressable } from "react-native";
 import Constants from "expo-constants";
-import Text from './Text';
+import Text from "./Text";
 import { Link, useNavigate } from "react-router-native";
 import { ScrollView } from "react-native";
 import { useApolloClient, useQuery } from "@apollo/client/react";
@@ -20,46 +20,64 @@ const styles = StyleSheet.create({
   },
   link: {
     marginRight: 20,
-    marginBottom: 20
+    marginBottom: 20,
+    flexDirection: "row",
   },
   text: {
     color: "#fff",
     fontWeight: "bold",
     fontSize: 16,
+    flexDirection: "row",
   },
 });
 
 const AppBar = () => {
-  const apolloClient = useApolloClient()
-  const navigate = useNavigate()
-  const authStorage = useAuthStorage()
-  const {data, loading, error} = useQuery(ME)
+  const apolloClient = useApolloClient();
+  const navigate = useNavigate();
+  const authStorage = useAuthStorage();
+  const { data, loading, error } = useQuery(ME);
 
-  if (loading) return <Text>Loading ...</Text>
-  if (error) return <Text>Error occurred {error}</Text>
+  if (loading) return <Text>Loading ...</Text>;
+  if (error) return <Text>Error occurred {error}</Text>;
 
-  const user = data?.me
+  const user = data?.me;
 
   const handleSignOut = async () => {
     await authStorage.removeAccessToken();
-    await apolloClient.resetStore()
-    navigate("/")
-  }
+    await apolloClient.resetStore();
+    navigate("/");
+  };
 
   return (
     <View style={styles.container}>
       <ScrollView horizontal contentContainerStyle={styles.scroll}>
-          <Link to="/" style={styles.link}>
-            <Text style={styles.text}>Repositories</Text>
-          </Link>
+        <Link to="/" style={styles.link}>
+          <Text style={styles.text}>Repositories</Text>
+        </Link>
 
-          {user ? (
+        {user && (
+          <Link to="/create-review" style={styles.link}>
+            <Text style={styles.text}>Create a review</Text>
+          </Link>
+        )}
+        {user && (
+          <Link to="/my-reviews" style={styles.link}>
+            <Text style={styles.text}>My reviews</Text>
+          </Link>
+        )}
+        {user ? (
           <Pressable onPress={handleSignOut} style={styles.link}>
             <Text style={styles.text}>Sign out</Text>
           </Pressable>
         ) : (
           <Link to="/signin" style={styles.link}>
             <Text style={styles.text}>Sign in</Text>
+          </Link>
+        )}
+
+        {!user && (
+          <Link to="/signup" style={styles.link}>
+            <Text style={styles.text}>Sign up</Text>
           </Link>
         )}
       </ScrollView>

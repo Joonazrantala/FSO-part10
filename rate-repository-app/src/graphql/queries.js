@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 const REPOSITORY_DETAILS = gql`
   fragment RepositoryDetails on Repository {
@@ -7,8 +7,8 @@ const REPOSITORY_DETAILS = gql`
     description
     stargazersCount
     forksCount
-		reviewCount
-		ratingAverage
+    reviewCount
+    ratingAverage
     language
     url
     ownerAvatarUrl
@@ -16,8 +16,16 @@ const REPOSITORY_DETAILS = gql`
 `;
 
 export const GET_REPOSITORIES = gql`
-  query GetRepositories {
-    repositories {
+  query GetRepositories(
+    $orderBy: AllRepositoriesOrderBy
+    $orderDirection: OrderDirection
+    $searchKeyword: String
+  ) {
+    repositories(
+      orderBy: $orderBy
+      orderDirection: $orderDirection
+      searchKeyword: $searchKeyword
+    ) {
       edges {
         node {
           ...RepositoryDetails
@@ -29,9 +37,47 @@ export const GET_REPOSITORIES = gql`
 `;
 
 export const ME = gql`
-  query getMe {
+  query GetMe($includeReviews: Boolean! = false) {
     me {
       id
       username
+      reviews @include(if: $includeReviews) {
+        edges {
+          node {
+            id
+            text
+            rating
+            createdAt
+            repository {
+              name
+              id
+            }
+          }
+        }
+      }
     }
-}`
+  }
+`;
+
+export const SINGLE_REPOSITORY = gql`
+  query GetRepository($id: ID!) {
+    repository(id: $id) {
+      ...RepositoryDetails
+      reviews {
+        edges {
+          node {
+            id
+            text
+            rating
+            createdAt
+            user {
+              id
+              username
+            }
+          }
+        }
+      }
+    }
+  }
+  ${REPOSITORY_DETAILS}
+`;
